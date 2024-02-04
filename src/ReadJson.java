@@ -36,7 +36,7 @@ public class ReadJson {
         String totlaJson="";
         try {
 
-            URL url = new URL("https://swapi.dev/api/people/4/");
+            URL url = new URL("https://pokeapi.co/api/v2/pokemon/132/");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
@@ -74,17 +74,15 @@ public class ReadJson {
         try {
 
             String name = (String)jsonObject.get("name");
-            String eye_color = (String)jsonObject.get("eye_color");
 
-            org.json.simple.JSONArray msg = (org.json.simple.JSONArray) jsonObject.get("starships");
-            int n =   msg.size(); //(msg).length();
-            for (int i = 0; i < n; ++i) {
-                String test =(String) msg.get(i);
-                System.out.println(test);
+            //org.json.simple.JSONArray msg = (org.json.simple.JSONArray) jsonObject.get("abilities");
+            //int n =   msg.size(); //(msg).length();
+            //for (int i = 0; i < n; ++i) {
+             //   String test =(String) msg.get(i);
+              //  System.out.println(test);
                 // System.out.println(person.getInt("key"));
-            }
+            //}
             System.out.println(name);
-            System.out.println(eye_color);
         }
 
         catch (Exception e) {
