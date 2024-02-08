@@ -9,6 +9,7 @@ import java.net.URL;
 // video to load jar
 //https://www.youtube.com/watch?v=QAJ09o3Xl_0
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -36,7 +37,7 @@ public class ReadJson {
         String totlaJson="";
         try {
 
-            URL url = new URL("https://pokeapi.co/api/v2/pokemon/132/");
+            URL url = new URL("https://last-airbender-api.fly.dev/api/v1/characters");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
@@ -68,21 +69,41 @@ public class ReadJson {
 
         JSONParser parser = new JSONParser();
         //System.out.println(str);
-        org.json.simple.JSONObject jsonObject = (org.json.simple.JSONObject) parser.parse(totlaJson);
-        System.out.println(jsonObject);
+        org.json.simple.JSONArray jsonObjectArray = (org.json.simple.JSONArray) parser.parse(totlaJson);
+        System.out.println(jsonObjectArray);
 
         try {
+            System.out.println(jsonObjectArray.get(0));
 
-            String name = (String)jsonObject.get("name");
+            JSONObject secretTunnelGuy = (JSONObject) jsonObjectArray.get(0);
+            System.out.println(secretTunnelGuy.get("name"));
+            org.json.simple.JSONArray secretTunnelGuyAllies = (JSONArray) secretTunnelGuy.get("allies");
+            System.out.println(secretTunnelGuyAllies.get(0));
 
-            //org.json.simple.JSONArray msg = (org.json.simple.JSONArray) jsonObject.get("abilities");
-            //int n =   msg.size(); //(msg).length();
-            //for (int i = 0; i < n; ++i) {
-             //   String test =(String) msg.get(i);
-              //  System.out.println(test);
-                // System.out.println(person.getInt("key"));
-            //}
-            System.out.println(name);
+            JSONObject guy2 = (JSONObject) jsonObjectArray.get(1);
+            System.out.println(guy2.get("name"));
+            org.json.simple.JSONArray guy2Allies = (JSONArray) guy2.get("allies");
+            System.out.println(guy2Allies.get(0));
+
+            for (int i=0;i<jsonObjectArray.size();i++){
+                JSONObject guy = (JSONObject) jsonObjectArray.get(i);
+                System.out.println("Person "+(i+1)+ ":" + guy.get("name"));
+                org.json.simple.JSONArray guy_allies = (JSONArray) guy.get("allies");
+                for (int a = 0; a< guy_allies.size();a++){
+                    System.out.println("Person "+(i+1)+ " Ally:" +guy_allies.get(a));
+                }
+            }
+
+
+            // String name = (String)jsonObjectArray.get("name");
+
+          //  org.json.simple.JSONArray msg = (org.json.simple.JSONArray) jsonObjectArray.get("abilities");
+           // int n =   msg.size(); //(msg).length();
+          //  for (int i = 0; i < n; ++i) {
+           //     String test =(String) msg.get(i);
+           //     System.out.println(test);
+         //   }
+         //   System.out.println(name);
         }
 
         catch (Exception e) {
