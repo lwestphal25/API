@@ -13,27 +13,26 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import javax.swing.*;
 
-public class StarWars implements ActionListener {
+public class Bored implements ActionListener {
 
     public int pokemon_counter=0;
     private JFrame mainFrame;
-    private JTextArea pokemon, allies;
+    private JTextArea activityTextArea;
 
     private JPanel buttonPanel, mainPanel, personPanel, allyPanel;
 
     private JLabel personLabel, allyLabel;
-    private org.json.simple.JSONArray jsonObjectArray;
+    private org.json.simple.JSONObject jsonObject;
     private int WIDTH=800;
     private int HEIGHT=700;
 
 
-    public StarWars() throws ParseException{
+    public Bored() throws ParseException{
         prepareGUI();
-        pull();
     }
 
     public static void main(String[] args) throws  ParseException {
-        StarWars StarWars = new StarWars();
+        Bored StarWars = new Bored();
         StarWars.showEventDemo();
     }
 
@@ -81,8 +80,8 @@ public class StarWars implements ActionListener {
 
 
 
-        pokemon = new JTextArea();
-        allies = new JTextArea();
+        activityTextArea = new JTextArea();
+
 
         mainFrame.add(buttonPanel, BorderLayout.SOUTH);
         mainFrame.add(mainPanel, BorderLayout.CENTER);
@@ -91,9 +90,8 @@ public class StarWars implements ActionListener {
         mainPanel.add(personPanel);
         mainPanel.add(allyPanel);
         personPanel.add(personLabel, BorderLayout.NORTH);
-        personPanel.add(pokemon, BorderLayout.CENTER);
+        personPanel.add(activityTextArea, BorderLayout.CENTER);
         allyPanel.add(allyLabel, BorderLayout.NORTH);
-        allyPanel.add(allies, BorderLayout.CENTER);
 
 
         mainFrame.setVisible(true);
@@ -104,59 +102,13 @@ public class StarWars implements ActionListener {
 
     }
 
-
-
-    private class ButtonClickListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            String command = e.getActionCommand();
-
-            if (command.equals("Next")) {
-                pokemon.setText("");
-                allies.setText("");
-                pokemon_counter++;
-                personLabel.setText("Person "+(pokemon_counter-1));
-                allyLabel.setText("Ally "+(pokemon_counter-1));
-                if (pokemon_counter > jsonObjectArray.size()){
-
-                    pokemon_counter = 1;
-                }
-                JSONObject guy = (JSONObject) jsonObjectArray.get(pokemon_counter-1);
-                pokemon.append((String) guy.get("name"));
-                org.json.simple.JSONArray guy_allies = (JSONArray) guy.get("allies");
-                for (int a = 0; a< guy_allies.size();a++){
-                    allies.append((String)guy_allies.get(a));
-                }
-            } else if (command.equals("Previous")) {
-                pokemon.setText("");
-                allies.setText("");
-                pokemon_counter--;
-                personLabel.setText("Person "+(pokemon_counter-1));
-                allyLabel.setText("Ally "+(pokemon_counter-1));
-                if (pokemon_counter < 1){
-
-                    pokemon_counter = jsonObjectArray.size();
-                }
-                JSONObject guy = (JSONObject) jsonObjectArray.get(pokemon_counter-1);
-                pokemon.append((String)guy.get("name"));
-                org.json.simple.JSONArray guy_allies = (JSONArray) guy.get("allies");
-                for (int a = 0; a< guy_allies.size();a++){
-                    allies.append((String)guy_allies.get(a));
-                }
-            }
-            else {
-
-            }
-        }
-    }
-
-    public static void pull() throws ParseException {
+    public void pull(String user_type, String user_minprice, String user_maxprice, String user_minaccesibility, String user_maxaccesibility, String user_participants) throws ParseException {
         String output = "abc";
         String totlaJson="";
         try {
 
-            String user_type = "recreational";
 
-            URL url = new URL("http://www.boredapi.com/api/activity/?type="+user_type);
+            URL url = new URL("http://www.boredapi.com/api/activity/?type="+user_type+"&&participants="+user_participants+"&&minprice="+user_minprice+"&&maxprice="+user_maxprice+"&&minaccesibility="+user_minaccesibility+"&&maxaccesibility="+user_maxaccesibility);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
@@ -188,7 +140,7 @@ public class StarWars implements ActionListener {
 
         JSONParser parser = new JSONParser();
         //System.out.println(str);
-        org.json.simple.JSONObject jsonObject = (org.json.simple.JSONObject) parser.parse(totlaJson);
+        jsonObject = (org.json.simple.JSONObject) parser.parse(totlaJson);
         System.out.println(jsonObject);
 
         try {
@@ -210,6 +162,28 @@ public class StarWars implements ActionListener {
 
 
     }
+
+
+
+    private class ButtonClickListener implements ActionListener  {
+        public void actionPerformed(ActionEvent e) {
+            String command = e.getActionCommand();
+
+            if (command.equals("Next")) {
+                try {
+                    pull("social", "", "", "", "", "3");
+                } catch (ParseException c){
+                  //  System.out.println(c);
+                }
+                String activity = (String)jsonObject.get("activity");
+                activityTextArea.setText(activity);
+            } else {
+
+            }
+        }
+    }
+
+
 
 
 
