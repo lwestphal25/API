@@ -151,6 +151,9 @@ public class Bored implements ActionListener {
             System.out.println(type);
             System.out.println(activity);
 
+            System.out.println(type);
+            System.out.println(activity);
+
 
         }
 
