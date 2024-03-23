@@ -17,11 +17,11 @@ public class Bored implements ActionListener {
 
     public int pokemon_counter=0;
     private JFrame mainFrame;
-    private JTextArea activityTextArea;
+    private JTextArea activityTA, minATA, maxATA, typeTA, minPTA, maxPTA, participantTA;
 
-    private JPanel buttonPanel, mainPanel, personPanel, allyPanel;
+    private JPanel accessibilityPanel, typePanel, participantsPanel, pricePanel, infoPanel, outputPanel, minAPanel, maxAPanel, minPPanel, maxPPanel;
 
-    private JLabel personLabel, allyLabel;
+    private JLabel maxALabel, minALabel, typeLabel, participantsLabel, minPLabel, maxPLabel, activityLabel;
     private org.json.simple.JSONObject jsonObject;
     private int WIDTH=800;
     private int HEIGHT=700;
@@ -39,7 +39,7 @@ public class Bored implements ActionListener {
     private void prepareGUI() {
         mainFrame = new JFrame("Layout");
         mainFrame.setSize(WIDTH, HEIGHT);
-        mainFrame.setLayout(new BorderLayout());
+        mainFrame.setLayout(new GridLayout(2, 1));
 
         mainFrame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent windowEvent) {
@@ -52,46 +52,95 @@ public class Bored implements ActionListener {
 
     private void showEventDemo() {
 
-        JButton nextButton = new JButton("Next");
+        JButton activityButton = new JButton("Display Activity");
         JButton previousButton = new JButton("Previous");
 
 
-        personLabel = new JLabel("Person");
-        allyLabel = new JLabel("Ally");
-
-        buttonPanel = new JPanel();
-        mainPanel = new JPanel();
-        personPanel = new JPanel();
-        allyPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(1, 2));
-        mainPanel.setLayout(new GridLayout(2, 1));
-        personPanel.setLayout(new BorderLayout());
-        allyPanel.setLayout(new BorderLayout());
-
-        nextButton.setActionCommand("Next");
-        previousButton.setActionCommand("Previous");
+        minALabel = new JLabel("Min Accesibility");
+        maxALabel = new JLabel("Max Accesibility");
+        typeLabel = new JLabel("Type of Activity");
+        participantsLabel = new JLabel("Number of Participants");
+        minPLabel = new JLabel("Min Price");
+        maxPLabel = new JLabel("Max Price");
+        activityLabel = new JLabel("Activity");
 
 
 
-        nextButton.addActionListener(new ButtonClickListener());
-        previousButton.addActionListener(new ButtonClickListener());
+        infoPanel = new JPanel();
+        accessibilityPanel = new JPanel();
+        minAPanel = new JPanel();
+        maxAPanel = new JPanel();
+        outputPanel = new JPanel();
+        pricePanel = new JPanel();
+        minPPanel = new JPanel();
+        maxPPanel = new JPanel();
+        participantsPanel = new JPanel();
+        typePanel = new JPanel();
+
+        infoPanel.setLayout(new GridLayout(1, 4));
+        accessibilityPanel.setLayout(new GridLayout(2,1));
+        minAPanel.setLayout(new BorderLayout());
+        maxAPanel.setLayout(new BorderLayout());
+        outputPanel.setLayout(new BorderLayout());
+        pricePanel.setLayout(new GridLayout(2,1));
+        minPPanel.setLayout(new BorderLayout());
+        maxPPanel.setLayout(new BorderLayout());
+        participantsPanel.setLayout(new BorderLayout());
+        typePanel.setLayout(new BorderLayout());
+
+        activityButton.setActionCommand("Next");
+
+
+
+
+        activityButton.addActionListener(new ButtonClickListener());
 
 
 
 
 
-        activityTextArea = new JTextArea();
+        activityTA = new JTextArea();
+        typeTA = new JTextArea();
+        participantTA = new JTextArea();
+        minATA = new JTextArea();
+        maxATA = new JTextArea();
+        minPTA = new JTextArea();
+        maxPTA = new JTextArea();
+
+        mainFrame.add(infoPanel);
+        mainFrame.add(outputPanel);
 
 
-        mainFrame.add(buttonPanel, BorderLayout.SOUTH);
-        mainFrame.add(mainPanel, BorderLayout.CENTER);
-        buttonPanel.add(nextButton);
-        buttonPanel.add(previousButton);
-        mainPanel.add(personPanel);
-        mainPanel.add(allyPanel);
-        personPanel.add(personLabel, BorderLayout.NORTH);
-        personPanel.add(activityTextArea, BorderLayout.CENTER);
-        allyPanel.add(allyLabel, BorderLayout.NORTH);
+        infoPanel.add(typePanel);
+        infoPanel.add(participantsPanel);
+        infoPanel.add(accessibilityPanel);
+        infoPanel.add(pricePanel);
+
+        typePanel.add(typeLabel, BorderLayout.NORTH);
+        typePanel.add(typeTA, BorderLayout.CENTER);
+
+        participantsPanel.add(participantsLabel, BorderLayout.NORTH);
+        participantsPanel.add(participantTA, BorderLayout.CENTER);
+
+        accessibilityPanel.add(minAPanel);
+        accessibilityPanel.add(maxAPanel);
+        minAPanel.add(minALabel, BorderLayout.NORTH);
+        minAPanel.add(minATA, BorderLayout.CENTER);
+        maxAPanel.add(maxALabel, BorderLayout.NORTH);
+        maxAPanel.add(maxATA, BorderLayout.CENTER);
+
+
+        pricePanel.add(minPPanel);
+        pricePanel.add(maxPPanel);
+        minPPanel.add(minPLabel, BorderLayout.NORTH);
+        minPPanel.add(minPTA, BorderLayout.CENTER);
+        maxPPanel.add(maxPLabel, BorderLayout.NORTH);
+        maxPPanel.add(maxPTA, BorderLayout.CENTER);
+
+        outputPanel.add(activityButton, BorderLayout.NORTH);
+        outputPanel.add(activityTA, BorderLayout.CENTER);
+
+
 
 
         mainFrame.setVisible(true);
@@ -146,13 +195,6 @@ public class Bored implements ActionListener {
         try {
 
 
-            String type = (String)jsonObject.get("type");
-            String activity = (String)jsonObject.get("activity");
-            System.out.println(type);
-            System.out.println(activity);
-
-            System.out.println(type);
-            System.out.println(activity);
 
 
         }
@@ -174,12 +216,12 @@ public class Bored implements ActionListener {
 
             if (command.equals("Next")) {
                 try {
-                    pull("social", "", "", "", "", "3");
+                    pull(typeTA.getText(), "", "", "", "", participantTA.getText());
                 } catch (ParseException c){
                   //  System.out.println(c);
                 }
                 String activity = (String)jsonObject.get("activity");
-                activityTextArea.setText(activity);
+                activityTA.setText(activity);
             } else {
 
             }
