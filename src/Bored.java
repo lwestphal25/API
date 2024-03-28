@@ -157,7 +157,7 @@ public class Bored implements ActionListener {
         try {
 
 
-            URL url = new URL("http://www.boredapi.com/api/activity/?type="+user_type+"&&participants="+user_participants+"&&minprice="+user_minprice+"&&maxprice="+user_maxprice+"&&minaccesibility="+user_minaccesibility+"&&maxaccesibility="+user_maxaccesibility);
+            URL url = new URL("http://www.boredapi.com/api/activity/?type="+user_type+"&&participants="+user_participants+"&&minprice="+user_minprice+"&&maxprice="+user_maxprice+"&&minaccessibility="+user_minaccesibility+"&&maxaccessibility="+user_maxaccesibility);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
@@ -216,7 +216,8 @@ public class Bored implements ActionListener {
 
             if (command.equals("Next")) {
                 try {
-                    pull(typeTA.getText(), "", "", "", "", participantTA.getText());
+                    pull(typeTA.getText(), minPTA.getText(), maxPTA.getText(), minATA.getText(), maxATA.getText(), participantTA.getText());
+                    System.out.println(minATA.getText()+", "+maxATA.getText());
                 } catch (ParseException c){
                   //  System.out.println(c);
                 }
