@@ -214,18 +214,35 @@ public class Bored implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             String command = e.getActionCommand();
 
-            if (command.equals("Next")) {
-                try {
-                    pull(typeTA.getText(), minPTA.getText(), maxPTA.getText(), minATA.getText(), maxATA.getText(), participantTA.getText());
-                    System.out.println(minATA.getText()+", "+maxATA.getText());
-                } catch (ParseException c){
-                  //  System.out.println(c);
-                }
-                String activity = (String)jsonObject.get("activity");
-                activityTA.setText(activity);
-            } else {
+                if (command.equals("Next")) {
+                    try {
+                        pull(typeTA.getText(), minPTA.getText(), maxPTA.getText(), minATA.getText(), maxATA.getText(), participantTA.getText());
+                        System.out.println(minATA.getText()+", "+maxATA.getText());
+                    } catch (ParseException c){
+                        //  System.out.println(c);
+                    }
+
+                    String activity = (String)jsonObject.get("activity");
+                    if (activity == null){
+                        activityTA.setText("No activity aligns with the conditions you provided. Consider changing any of" +
+                                "the four conditions: type (\"education\", \"recreational\", \"social\", \"diy\", \"charity\"," +
+                                " \"cooking\", \"relaxation\", \"music\", \"busywork\"), " +
+                                "participants (the number of participants, any number greater than " +
+                                "1), accessibility (a number between 0.0 and 1.0 describing how possible an event " +
+                                "is to do with zero being the most accessible), and price (a number describing the price between 0.0" +
+                                " and 1.0, with 0 being free)");
+                        activityTA.setLineWrap(true);
+                        activityTA.setWrapStyleWord(true);
+
+
+                    }else {
+                        activityTA.setText(activity);
+                    }
+                } else {
+
 
             }
+
         }
     }
 
