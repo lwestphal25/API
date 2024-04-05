@@ -223,6 +223,7 @@ public class Bored implements ActionListener {
                     }
 
                     String activity = (String)jsonObject.get("activity");
+                    String link = (String)jsonObject.get("link");
                     if (activity == null){
                         activityTA.setText("No activity aligns with the conditions you provided. Consider changing any of" +
                                 "the four conditions: type (\"education\", \"recreational\", \"social\", \"diy\", \"charity\"," +
@@ -232,11 +233,14 @@ public class Bored implements ActionListener {
                                 "is to do with zero being the most accessible), and price (a number describing  price between 0.0" +
                                 " and 1.0, with 0 being free)");
                         activityTA.setLineWrap(true);
-                        activityTA.setWrapStyleWord(true);
+                        activityTA.setWrapStyleWord(true);;
 
 
                     }else {
-                        activityTA.setText(activity);
+                        activityTA.setText(activity +"\n");
+                        if (!link.equals("")){
+                            activityTA.append("Here is a link to help: "+link);
+                        }
                     }
                 } else {
 
