@@ -229,7 +229,7 @@ public class Bored implements ActionListener {
                                 " \"cooking\", \"relaxation\", \"music\", \"busywork\"), " +
                                 "participants (the number of participants, any number greater than " +
                                 "1), accessibility (a number between 0.0 and 1.0 describing how possible an event " +
-                                "is to do with zero being the most accessible), and price (a number describing the price between 0.0" +
+                                "is to do with zero being the most accessible), and price (a number describing  price between 0.0" +
                                 " and 1.0, with 0 being free)");
                         activityTA.setLineWrap(true);
                         activityTA.setWrapStyleWord(true);
