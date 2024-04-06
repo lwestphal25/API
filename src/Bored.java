@@ -3,6 +3,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.BufferedReader;
@@ -40,7 +41,7 @@ public class Bored implements ActionListener {
     public static void main(String[] args) throws  ParseException {
         Bored StarWars = new Bored();
         StarWars.showEventDemo();
-        System.out.println(generateResponse("What are you?"));
+        System.out.println(generateResponse("How do you work?"));
     }
 
     private void prepareGUI() {
@@ -215,11 +216,12 @@ public class Bored implements ActionListener {
 
     }
 
-    public static String generateResponse(String input) {
+
+    public static String generateResponse(String prompt) {
         try {
-            // Create a JSON object with your input
-            //String requestBody = "{\"prompt\":\"" + input + "\",\"max_tokens\":50,\"model\":\"gpt-3.5-turbo-1106\"}";
-            String requestBody = "{\"model\":\"gpt-3.5-turbo-1106\",\"messages\":[{\"role\":\"user\",\"content\":\"" + input + "\"}]}";
+            // Create request body
+            String requestBody = "{\"model\":\"gpt-3.5-turbo-1106\",\"messages\":[{\"role\":\"user\",\"content\":\"" + prompt + "\"}]}";
+
             // Create connection
             URL url = new URL(API_ENDPOINT);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -234,33 +236,24 @@ public class Bored implements ActionListener {
                 wr.flush();
             }
 
-            int responseCode = connection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) { // Successful response
-                // Get response
-                StringBuilder response = new StringBuilder();
-                try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-                    String line;
-                    while ((line = in.readLine()) != null) {
-                        response.append(line);
-                    }
+            // Get response
+            StringBuilder response = new StringBuilder();
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                String line;
+                while ((line = in.readLine()) != null) {
+                    response.append(line);
                 }
-                // Extract and return the generated text from the response
-
-                return response.toString();
-
-            } else {
-                // Print error response
-                System.out.println("HTTP Error: " + responseCode);
-                try (BufferedReader errorIn = new BufferedReader(new InputStreamReader(connection.getErrorStream()))) {
-                    String errorLine;
-                    StringBuilder errorResponse = new StringBuilder();
-                    while ((errorLine = errorIn.readLine()) != null) {
-                        errorResponse.append(errorLine);
-                    }
-                    System.out.println("Error Response: " + errorResponse.toString());
-                }
-                return "Error: HTTP " + responseCode;
             }
+
+            JSONParser parser = new JSONParser();
+            JSONObject jsonResponse = (JSONObject) parser.parse(response.toString());
+            JSONArray choices = (JSONArray) jsonResponse.get("choices");
+            JSONObject choice = (JSONObject) choices.get(0);
+            JSONObject message = (JSONObject) choice.get("message");
+            String content = (String) message.get("content");
+
+            // Return the content
+            return content;
         } catch (Exception e) {
             e.printStackTrace();
             return "Error: Failed to generate response.";
@@ -298,6 +291,7 @@ public class Bored implements ActionListener {
 
                     }else {
                         activityTA.setText(activity +"\n");
+                        activityTA.append(generateResponse("Give me a short summary of how to do this activity: "+activity)+"\n");
                         if (!link.equals("")){
                             activityTA.append("Here is a link to help: "+link);
                         }
