@@ -8,14 +8,20 @@ import java.awt.event.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import javax.swing.*;
+import java.io.DataOutputStream;
 
 public class Bored implements ActionListener {
 
     public int pokemon_counter=0;
+    private static final String API_ENDPOINT = "https://api.openai.com/v1/chat/completions";
+
+    // Your OpenAI API Key
+    private static final String API_KEY = "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";
     private JFrame mainFrame;
     private JTextArea activityTA, minATA, maxATA, typeTA, minPTA, maxPTA, participantTA;
 
@@ -34,6 +40,7 @@ public class Bored implements ActionListener {
     public static void main(String[] args) throws  ParseException {
         Bored StarWars = new Bored();
         StarWars.showEventDemo();
+        System.out.println(generateResponse("What are you?"));
     }
 
     private void prepareGUI() {
@@ -207,6 +214,59 @@ public class Bored implements ActionListener {
 
 
     }
+
+    public static String generateResponse(String input) {
+        try {
+            // Create a JSON object with your input
+            //String requestBody = "{\"prompt\":\"" + input + "\",\"max_tokens\":50,\"model\":\"gpt-3.5-turbo-1106\"}";
+            String requestBody = "{\"model\":\"gpt-3.5-turbo-1106\",\"messages\":[{\"role\":\"user\",\"content\":\"" + input + "\"}]}";
+            // Create connection
+            URL url = new URL(API_ENDPOINT);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Authorization", "Bearer " + API_KEY);
+            connection.setDoOutput(true);
+
+            // Send request
+            try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
+                wr.writeBytes(requestBody);
+                wr.flush();
+            }
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) { // Successful response
+                // Get response
+                StringBuilder response = new StringBuilder();
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                    String line;
+                    while ((line = in.readLine()) != null) {
+                        response.append(line);
+                    }
+                }
+                // Extract and return the generated text from the response
+
+                return response.toString();
+
+            } else {
+                // Print error response
+                System.out.println("HTTP Error: " + responseCode);
+                try (BufferedReader errorIn = new BufferedReader(new InputStreamReader(connection.getErrorStream()))) {
+                    String errorLine;
+                    StringBuilder errorResponse = new StringBuilder();
+                    while ((errorLine = errorIn.readLine()) != null) {
+                        errorResponse.append(errorLine);
+                    }
+                    System.out.println("Error Response: " + errorResponse.toString());
+                }
+                return "Error: HTTP " + responseCode;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error: Failed to generate response.";
+        }
+    }
+
 
 
 
