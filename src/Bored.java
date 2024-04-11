@@ -24,11 +24,11 @@ public class Bored implements ActionListener {
     // Your OpenAI API Key
     private static final String API_KEY = "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";
     private JFrame mainFrame;
-    private JTextArea activityTA, minATA, maxATA, typeTA, minPTA, maxPTA, participantTA;
+    private JTextArea activityTA, minATA, maxATA, typeTA, minPTA, maxPTA, participantTA, gptTA, linkTA;
 
-    private JPanel accessibilityPanel, typePanel, participantsPanel, pricePanel, infoPanel, outputPanel, minAPanel, maxAPanel, minPPanel, maxPPanel;
+    private JPanel activityPanel, accessibilityPanel, typePanel, participantsPanel, pricePanel, infoPanel, outputPanel, minAPanel, maxAPanel, minPPanel, maxPPanel, activityminiPanel, gptPanel, linkPanel;
 
-    private JLabel maxALabel, minALabel, typeLabel, participantsLabel, minPLabel, maxPLabel, activityLabel;
+    private JLabel maxALabel, minALabel, typeLabel, participantsLabel, minPLabel, maxPLabel, activityLabel, activityminiLabel, gptLabel, linkLabel;
     private org.json.simple.JSONObject jsonObject;
     private int WIDTH=800;
     private int HEIGHT=700;
@@ -71,6 +71,8 @@ public class Bored implements ActionListener {
         minPLabel = new JLabel("Min Price");
         maxPLabel = new JLabel("Max Price");
         activityLabel = new JLabel("Activity");
+        gptLabel = new JLabel("ChatGPT Help");
+        linkLabel = new JLabel("Link");
 
 
 
@@ -84,17 +86,24 @@ public class Bored implements ActionListener {
         maxPPanel = new JPanel();
         participantsPanel = new JPanel();
         typePanel = new JPanel();
+        activityPanel = new JPanel();
+        gptPanel = new JPanel();
+        linkPanel = new JPanel();
+
 
         infoPanel.setLayout(new GridLayout(1, 4));
         accessibilityPanel.setLayout(new GridLayout(2,1));
         minAPanel.setLayout(new BorderLayout());
         maxAPanel.setLayout(new BorderLayout());
-        outputPanel.setLayout(new BorderLayout());
+        outputPanel.setLayout(new GridLayout(3,1));
         pricePanel.setLayout(new GridLayout(2,1));
         minPPanel.setLayout(new BorderLayout());
         maxPPanel.setLayout(new BorderLayout());
         participantsPanel.setLayout(new BorderLayout());
         typePanel.setLayout(new BorderLayout());
+        activityPanel.setLayout(new BorderLayout());
+        gptPanel.setLayout(new BorderLayout());
+        linkPanel.setLayout(new BorderLayout());
 
         activityButton.setActionCommand("Next");
 
@@ -108,6 +117,8 @@ public class Bored implements ActionListener {
 
 
         activityTA = new JTextArea();
+        linkTA = new JTextArea();
+        gptTA = new JTextArea();
         typeTA = new JTextArea();
         participantTA = new JTextArea();
         minATA = new JTextArea();
@@ -145,8 +156,17 @@ public class Bored implements ActionListener {
         maxPPanel.add(maxPLabel, BorderLayout.NORTH);
         maxPPanel.add(maxPTA, BorderLayout.CENTER);
 
-        outputPanel.add(activityButton, BorderLayout.NORTH);
-        outputPanel.add(activityTA, BorderLayout.CENTER);
+        outputPanel.add(activityPanel);
+        outputPanel.add(gptPanel);
+        outputPanel.add(linkPanel);
+        activityPanel.add(activityButton, BorderLayout.NORTH);
+        activityPanel.add(activityTA, BorderLayout.CENTER);
+        gptPanel.add(gptLabel, BorderLayout.NORTH);
+        gptPanel.add(gptTA, BorderLayout.CENTER);
+        linkPanel.add(linkLabel, BorderLayout.NORTH);
+        linkPanel.add(linkTA, BorderLayout.CENTER);
+
+
 
 
 
@@ -268,6 +288,7 @@ public class Bored implements ActionListener {
             String command = e.getActionCommand();
 
                 if (command.equals("Next")) {
+                    linkTA.setText("");
                     try {
                         pull(typeTA.getText(), minPTA.getText(), maxPTA.getText(), minATA.getText(), maxATA.getText(), participantTA.getText());
                         System.out.println(minATA.getText()+", "+maxATA.getText());
@@ -291,9 +312,11 @@ public class Bored implements ActionListener {
 
                     }else {
                         activityTA.setText(activity +"\n");
-                        activityTA.append(generateResponse("Give me a short summary of how to do this activity: "+activity)+"\n");
+                        gptTA.setText(generateResponse("Give me a short summary of how to do this activity: "+activity)+"\n");
+                        gptTA.setLineWrap(true);
+                        gptTA.setWrapStyleWord(true);;
                         if (!link.equals("")){
-                            activityTA.append("Here is a link to help: "+link);
+                            linkTA.setText("Here is a link to help: "+link);
                         }
                     }
                 } else {
