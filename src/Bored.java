@@ -312,7 +312,7 @@ public class Bored implements ActionListener {
 
                     }else {
                         activityTA.setText(activity +"\n");
-                        gptTA.setText(generateResponse("Give me a short summary of how to do this activity: "+activity)+"\n");
+                        gptTA.setText(generateResponse("Give me a short summary of how to do the activity listed here: "+activity)+"\n");
                         gptTA.setLineWrap(true);
                         gptTA.setWrapStyleWord(true);;
                         if (!link.equals("")){
